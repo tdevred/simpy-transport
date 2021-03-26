@@ -1,10 +1,11 @@
 from loader import Loader
 from shop import Sandwicherie, BoutiqueSouvenirs
-from path import Dijkstra, computePath
 from kernel import Kernel
 from line import Line
 import simpy
 from random import randint, seed
+from sys import argv
+import os
 
 def main():
     env = simpy.Environment()
@@ -46,12 +47,12 @@ def main():
 
     env.run(until=1000)
 
-def mainLoading():
+def mainLoading(filename):
     env = simpy.Environment()
     
     kernel = Kernel(env)
     
-    loader = Loader('yourkata_without_bike.json')
+    loader = Loader(filename)
     loader.load(kernel)
 
     kernel.buildTransports()
@@ -64,5 +65,10 @@ def mainLoading():
 
 if __name__ == '__main__':
     seed()
-    mainLoading()
+    if len(argv) > 1:
+        filename = argv[1]
+        if os.path.exists(filename):
+            mainLoading(filename)
+            exit()
+    main()
 
